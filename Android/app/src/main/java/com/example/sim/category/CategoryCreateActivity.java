@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,6 +20,7 @@ import com.example.sim.R;
 import com.example.sim.dto.category.CategoryCreateDTO;
 import com.example.sim.service.CategoryNetwork;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,6 +37,10 @@ public class CategoryCreateActivity extends BaseActivity {
     TextInputEditText txtCategoryName;
     TextInputEditText txtCategoryPriority;
     TextInputEditText txtCategoryDescription;
+
+    private TextInputLayout txtFieldCategoryName;
+    private TextInputLayout txtFieldCategoryPriority;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +49,12 @@ public class CategoryCreateActivity extends BaseActivity {
         txtCategoryName=findViewById(R.id.txtCategoryName);
         txtCategoryPriority=findViewById(R.id.txtCategoryPriority);
         txtCategoryDescription=findViewById(R.id.txtCategoryDescription);
+
+        txtFieldCategoryName = findViewById(R.id.txtFieldCategoryName);
+        txtFieldCategoryPriority = findViewById(R.id.txtFieldCategoryPriority);
+
+        onChangeListener(txtCategoryName);
+        onChangeListener(txtCategoryPriority);
     }
 
     public void handleSelectImageClick(View view) {
@@ -50,6 +63,8 @@ public class CategoryCreateActivity extends BaseActivity {
     }
 
     public void handleCreateCategoryClick(View view) {
+        if(!validation())
+            return;
         CategoryCreateDTO model = new CategoryCreateDTO();
         model.setName(txtCategoryName.getText().toString());
         int number = Integer.parseInt(txtCategoryPriority.getText().toString());
@@ -75,6 +90,43 @@ public class CategoryCreateActivity extends BaseActivity {
                 });
     }
 
+    private void onChangeListener(TextInputEditText input) {
+        input.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                validation();
+            }
+        });
+
+    }
+    private boolean validation() {
+        boolean result = true;
+        String name = txtCategoryName.getText().toString();
+        String priority = txtCategoryPriority.getText().toString();
+        if(name.isEmpty()) {
+            result = false;
+            txtFieldCategoryName.setError("Вкажіть назву");
+        }
+        else
+            txtFieldCategoryName.setError("");
+        if(priority.isEmpty()) {
+            result = false;
+            txtFieldCategoryPriority.setError("Вкажіть пріорітет");
+        }
+        else
+            txtFieldCategoryPriority.setError("");
+        return result;
+    }
     private String uriGetBase64(Uri uri) {
         try {
             Bitmap bitmap=null;
