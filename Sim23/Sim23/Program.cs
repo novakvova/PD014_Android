@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
+using Sim23.Abastract;
 using Sim23.Data;
 using Sim23.Data.Entitties.Identity;
 using Sim23.Mapper;
+using Sim23.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -46,6 +48,8 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+
 builder.Services.AddAutoMapper(typeof(AppMapProfile));
 
 builder.Services.AddControllers();
@@ -73,6 +77,7 @@ app.UseStaticFiles(new StaticFileOptions
     RequestPath = "/images"
 });
 
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 
