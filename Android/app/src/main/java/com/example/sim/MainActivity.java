@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.example.sim.category.CategoriesAdapter;
 import com.example.sim.dto.category.CategoryItemDTO;
-import com.example.sim.service.CategoryNetwork;
+import com.example.sim.service.ApplicationNetwork;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ public class MainActivity extends BaseActivity {
     }
 
     void requestServer() {
-        CategoryNetwork
+        ApplicationNetwork
                 .getInstance()
                 .getJsonApi()
                 .list()

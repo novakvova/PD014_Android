@@ -10,4 +10,9 @@
         android:id="@+id/m_create"
         android:title="Додати"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/m_register"
+        android:title="Реєстрація"
+        app:showAsAction="never"/>
 </menu>
