@@ -4,10 +4,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import com.example.sim.category.CategoriesAdapter;
+import com.example.sim.category.CategoryEditActivity;
 import com.example.sim.dto.category.CategoryItemDTO;
 import com.example.sim.service.ApplicationNetwork;
 
@@ -54,7 +56,12 @@ public class MainActivity extends BaseActivity {
     }
 
     private void onClickEditButton(CategoryItemDTO category) {
-        Toast.makeText(this, "Ми редагуємо "+ category.getId(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(MainActivity.this, CategoryEditActivity.class);
+        Bundle b = new Bundle();
+        b.putInt("id", category.getId());
+        intent.putExtras(b);
+        startActivity(intent);
+        finish();
     }
 
 }

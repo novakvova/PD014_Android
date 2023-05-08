@@ -31,6 +31,17 @@ namespace Sim23.Controllers
                 .ToListAsync();
             return Ok(model);
         }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var category = await _appEFContext.Categories.FindAsync(id);
+            if (category is null)
+                return NotFound();
+
+            return Ok(_mapper.Map<CategoryItemViewModel>(category));
+
+        }
+
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] CategoryCreateItemVM model)
         {
@@ -58,8 +69,11 @@ namespace Sim23.Controllers
                 cat.Name = model.Name;
                 cat.Description = model.Description;
                 cat.Priotity = model.Priority;
-                ImageWorker.RemoveImage(cat.Image);
-                cat.Image = ImageWorker.SaveImage(model.ImageBase64);
+                if (!string.IsNullOrEmpty(model.ImageBase64))
+                {
+                    ImageWorker.RemoveImage(cat.Image);
+                    cat.Image = ImageWorker.SaveImage(model.ImageBase64);
+                }
                 _appEFContext.Update(cat);
                 _appEFContext.SaveChanges();
             }
